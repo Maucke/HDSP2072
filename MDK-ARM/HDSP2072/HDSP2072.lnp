@@ -1,0 +1,26 @@
+--cpu=Cortex-M4.fp
+"hdsp2072\startup_stm32f407xx.o"
+"hdsp2072\main.o"
+"hdsp2072\gpio.o"
+"hdsp2072\stm32f4xx_it.o"
+"hdsp2072\stm32f4xx_hal_msp.o"
+"hdsp2072\stm32f4xx_hal_tim.o"
+"hdsp2072\stm32f4xx_hal_tim_ex.o"
+"hdsp2072\stm32f4xx_hal_rcc.o"
+"hdsp2072\stm32f4xx_hal_rcc_ex.o"
+"hdsp2072\stm32f4xx_hal_flash.o"
+"hdsp2072\stm32f4xx_hal_flash_ex.o"
+"hdsp2072\stm32f4xx_hal_flash_ramfunc.o"
+"hdsp2072\stm32f4xx_hal_gpio.o"
+"hdsp2072\stm32f4xx_hal_dma_ex.o"
+"hdsp2072\stm32f4xx_hal_dma.o"
+"hdsp2072\stm32f4xx_hal_pwr.o"
+"hdsp2072\stm32f4xx_hal_pwr_ex.o"
+"hdsp2072\stm32f4xx_hal_cortex.o"
+"hdsp2072\stm32f4xx_hal.o"
+"hdsp2072\stm32f4xx_hal_exti.o"
+"hdsp2072\system_stm32f4xx.o"
+--library_type=microlib --strict --scatter "HDSP2072\HDSP2072.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list "HDSP2072.map" -o HDSP2072\HDSP2072.axf
