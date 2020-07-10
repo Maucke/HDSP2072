@@ -25,6 +25,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
+#include "stdio.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -419,97 +420,225 @@ const unsigned char VFD_Fonts[][91*5]=
 0x00,0x74,0x7C,0x4C,0x00,}/*"z",90*/
 };
 
-void Display(char* ch,int font)
+char displaystr[20];
+
+//graphic
+unsigned char gram[][5] = 
 {
-	int i,j;
+	//第1个数码管
+	0x00,0x00,0x00,0x00,0x00,//第1个字符
+	0x00,0x00,0x00,0x00,0x00,//第2个字符
+	0x00,0x00,0x00,0x00,0x00,//第3个字符
+	0x00,0x00,0x00,0x00,0x00,//第4个字符
+	0x00,0x00,0x00,0x00,0x00,//第5个字符
+	0x00,0x00,0x00,0x00,0x00,//第6个字符
+	0x00,0x00,0x00,0x00,0x00,//第7个字符
+	0x00,0x00,0x00,0x00,0x00,//第8个字符
 	
-  HAL_GPIO_WritePin(GPIOA, D1_Pin, GPIO_PIN_SET);
-  HAL_GPIO_WritePin(GPIOA, D2_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(GPIOA, D3_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(GPIOA, D4_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(GPIOA, D5_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(GPIOA, EN_Pin, GPIO_PIN_RESET);
-	for(i=0;i<8;i++) 
+	//第2个数码管
+	0x00,0x00,0x00,0x00,0x00,//第1个字符
+	0x00,0x00,0x00,0x00,0x00,//第2个字符
+	0x00,0x00,0x00,0x00,0x00,//第3个字符
+	0x00,0x00,0x00,0x00,0x00,//第4个字符
+	0x00,0x00,0x00,0x00,0x00,//第5个字符
+	0x00,0x00,0x00,0x00,0x00,//第6个字符
+	0x00,0x00,0x00,0x00,0x00,//第7个字符
+	0x00,0x00,0x00,0x00,0x00,//第8个字符
+};
+//target
+unsigned char tram[][5] = 
+{
+	//第1个数码管
+	0x00,0x00,0x00,0x00,0x00,//第1个字符
+	0x00,0x00,0x00,0x00,0x00,//第2个字符
+	0x00,0x00,0x00,0x00,0x00,//第3个字符
+	0x00,0x00,0x00,0x00,0x00,//第4个字符
+	0x00,0x00,0x00,0x00,0x00,//第5个字符
+	0x00,0x00,0x00,0x00,0x00,//第6个字符
+	0x00,0x00,0x00,0x00,0x00,//第7个字符
+	0x00,0x00,0x00,0x00,0x00,//第8个字符
+	
+	//第2个数码管
+	0x00,0x00,0x00,0x00,0x00,//第1个字符
+	0x00,0x00,0x00,0x00,0x00,//第2个字符
+	0x00,0x00,0x00,0x00,0x00,//第3个字符
+	0x00,0x00,0x00,0x00,0x00,//第4个字符
+	0x00,0x00,0x00,0x00,0x00,//第5个字符
+	0x00,0x00,0x00,0x00,0x00,//第6个字符
+	0x00,0x00,0x00,0x00,0x00,//第7个字符
+	0x00,0x00,0x00,0x00,0x00,//第8个字符
+};
+//before
+unsigned char bram[][5] = 
+{
+	//第1个数码管
+	0x00,0x00,0x00,0x00,0x00,//第1个字符
+	0x00,0x00,0x00,0x00,0x00,//第2个字符
+	0x00,0x00,0x00,0x00,0x00,//第3个字符
+	0x00,0x00,0x00,0x00,0x00,//第4个字符
+	0x00,0x00,0x00,0x00,0x00,//第5个字符
+	0x00,0x00,0x00,0x00,0x00,//第6个字符
+	0x00,0x00,0x00,0x00,0x00,//第7个字符
+	0x00,0x00,0x00,0x00,0x00,//第8个字符
+	
+	//第2个数码管
+	0x00,0x00,0x00,0x00,0x00,//第1个字符
+	0x00,0x00,0x00,0x00,0x00,//第2个字符
+	0x00,0x00,0x00,0x00,0x00,//第3个字符
+	0x00,0x00,0x00,0x00,0x00,//第4个字符
+	0x00,0x00,0x00,0x00,0x00,//第5个字符
+	0x00,0x00,0x00,0x00,0x00,//第6个字符
+	0x00,0x00,0x00,0x00,0x00,//第7个字符
+	0x00,0x00,0x00,0x00,0x00,//第8个字符
+};
+
+void ChoicePos(int index)
+{
+	HAL_GPIO_WritePin(GPIOA, D1_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOA, D2_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOA, D3_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOA, D4_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOA, D5_Pin, GPIO_PIN_RESET);
+	switch(index)
 	{
-		for(j=0;j<7;j++)
-		{
-			HAL_GPIO_WritePin(GPIOA, CLK_Pin, GPIO_PIN_SET);
-			HAL_GPIO_WritePin(GPIOA, DATA_Pin, (VFD_Fonts[font][(ch[6-i]-' ')*5]>>(6-j))&1);
-			HAL_GPIO_WritePin(GPIOA, CLK_Pin, GPIO_PIN_RESET);
-		}
+		case 0:HAL_GPIO_WritePin(GPIOA, D1_Pin, GPIO_PIN_SET);break;
+		case 1:HAL_GPIO_WritePin(GPIOA, D2_Pin, GPIO_PIN_SET);break;
+		case 2:HAL_GPIO_WritePin(GPIOA, D3_Pin, GPIO_PIN_SET);break;
+		case 3:HAL_GPIO_WritePin(GPIOA, D4_Pin, GPIO_PIN_SET);break;
+		case 4:HAL_GPIO_WritePin(GPIOA, D5_Pin, GPIO_PIN_SET);break;
 	}
-  HAL_GPIO_WritePin(GPIOA, EN_Pin, GPIO_PIN_SET);
-	HAL_Delay(1);
-  HAL_GPIO_WritePin(GPIOA, D1_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(GPIOA, D2_Pin, GPIO_PIN_SET);
-  HAL_GPIO_WritePin(GPIOA, D3_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(GPIOA, D4_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(GPIOA, D5_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(GPIOA, EN_Pin, GPIO_PIN_RESET);
-	for(i=0;i<8;i++) 
+}
+
+unsigned char checkdiff(unsigned char* array1,unsigned char* array2,int len)
+{
+	int i;
+	for(i=0;i<len;i++)
 	{
-		for(j=0;j<7;j++)
-		{
-			HAL_GPIO_WritePin(GPIOA, CLK_Pin, GPIO_PIN_SET);
-			HAL_GPIO_WritePin(GPIOA, DATA_Pin, (VFD_Fonts[font][(ch[6-i]-' ')*5+1]>>(6-j))&1);
-			HAL_GPIO_WritePin(GPIOA, CLK_Pin, GPIO_PIN_RESET);
-		}
+		if(array1[i]!=array2[i])
+			return 0;
 	}
-  HAL_GPIO_WritePin(GPIOA, EN_Pin, GPIO_PIN_SET);
-	HAL_Delay(1);
-  HAL_GPIO_WritePin(GPIOA, D1_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(GPIOA, D2_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(GPIOA, D3_Pin, GPIO_PIN_SET);
-  HAL_GPIO_WritePin(GPIOA, D4_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(GPIOA, D5_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(GPIOA, EN_Pin, GPIO_PIN_RESET);
-	for(i=0;i<8;i++) 
+	return 1;
+}
+
+void Animotion(char* ch,int motion,int font)
+{
+	int i,k,j;
+	static int animotionstep[14]={0};
+	
+	for(k=0;k<5;k++)
+		for(i=0;i<8;i++)
+			tram[i][k] = VFD_Fonts[font][(ch[i]-' ')*5+k];
+	for(k=0;k<8;k++)
 	{
-		for(j=0;j<7;j++)
+		if(checkdiff(gram[k],tram[k],5)==0)
 		{
-			HAL_GPIO_WritePin(GPIOA, CLK_Pin, GPIO_PIN_SET);
-			HAL_GPIO_WritePin(GPIOA, DATA_Pin, (VFD_Fonts[font][(ch[6-i]-' ')*5+2]>>(6-j))&1);
-			HAL_GPIO_WritePin(GPIOA, CLK_Pin, GPIO_PIN_RESET);
+			switch(motion)
+			{
+				case 0:
+				switch(animotionstep[k])
+				{
+					case 0:for(i=0;i<5;i++) bram[k][i] = gram[k][i];break;
+					case 1:gram[k][2] &= ~0x8;break;
+					case 2:gram[k][1] &= ~0x8;gram[k][2] &= ~0x1C;gram[k][3] &= ~0x8;break;
+					case 3:gram[k][0] &= ~0x8;gram[k][1] &= ~0x1C;gram[k][2] &= ~0x3E;gram[k][3] &= ~0x1C;gram[k][4] &= ~0x8;break;
+					case 4:gram[k][0] &= ~0x1C;gram[k][1] &= ~0x3E;gram[k][2] = tram[k][2]&0x8;gram[k][3] &= ~0x3E;gram[k][4] &= ~0x1C;break;
+					case 5:gram[k][0] &= ~0x3E;gram[k][1] = tram[k][1]&0x8;gram[k][2] = tram[k][2]&0x1C;gram[k][3] = tram[k][3]&0x8;gram[k][4] &= ~0x3E;break;
+					case 6:gram[k][0] = tram[k][0]&0x8;gram[k][1] = tram[k][1]&0x1C;gram[k][2] = tram[k][2]&0x3E;gram[k][3] = tram[k][3]&0x1C;gram[k][4] = tram[k][4]&0x8;break;
+					case 7:gram[k][0] = tram[k][0]&0x1C;gram[k][1] = tram[k][1]&0x3E;gram[k][2] = tram[k][2];gram[k][3] = tram[k][3]&0x3E;gram[k][4] = tram[k][4]&0x1C;break;
+					case 8:gram[k][0] = tram[k][0]&0x3E;gram[k][1] = tram[k][1];gram[k][2] = tram[k][2];gram[k][3] = tram[k][3];gram[k][4] = tram[k][4]&0x3E;break;
+					case 9:for(i=0;i<5;i++) gram[k][i] = tram[k][i];animotionstep[k]=0;break;
+					default:animotionstep[k]=0;break;
+				}break;
+				case 1:
+				switch(animotionstep[k])
+				{
+					case 0:for(i=0;i<5;i++) bram[k][i] = gram[k][i];break;
+					case 1:gram[k][4] &= ~0x40;break;
+					case 2:gram[k][4] &= ~0x60;gram[k][3] &= ~0x40;break;
+					case 3:gram[k][4] &= ~0x70;gram[k][3] &= ~0x60;gram[k][2] &= ~0x40;break;
+					case 4:gram[k][4] &= ~0x78;gram[k][3] &= ~0x70;gram[k][2] &= ~0x60;gram[k][1] &= ~0x40;
+					gram[k][4] |= tram[k][4]&0x40;break;
+					case 5:gram[k][4] &= ~0x7C;gram[k][3] &= ~0x78;gram[k][2] &= ~0x70;gram[k][1] &= ~0x60;gram[k][0] &= ~0x40;
+					gram[k][4] |= tram[k][4]&0x60;gram[k][3] |= tram[k][3]&0x40;break;
+					case 6:gram[k][4] &= ~0x7E;gram[k][3] &= ~0x7C;gram[k][2] &= ~0x78;gram[k][1] &= ~0x70;gram[k][0] &= ~0x60;
+					gram[k][4] |= tram[k][4]&0x70;gram[k][3] |= tram[k][3]&0x60;gram[k][2] |= tram[k][2]&0x40;break;
+					case 7:gram[k][3] &= ~0x7E;gram[k][2] &= ~0x7C;gram[k][1] &= ~0x78;gram[k][0] &= ~0x70;
+					gram[k][4] = tram[k][4]&0x78;gram[k][3] |= tram[k][3]&0x70;gram[k][2] |= tram[k][2]&0x60;gram[k][1] |= tram[k][1]&0x40;break;
+					case 8:gram[k][2] &= ~0x7E;gram[k][1] &= ~0x7C;gram[k][0] &= ~0x78;
+					gram[k][4] = tram[k][4]&0x7C;gram[k][3] = tram[k][3]&0x78;gram[k][2] |= tram[k][2]&0x70;gram[k][1] |= tram[k][1]&0x60;gram[k][0] |= tram[k][0]&0x40;break;
+					case 9:gram[k][1] &= ~0x7E;gram[k][0] &= ~0x7C;
+					gram[k][4] = tram[k][4]&0x7E;gram[k][3] = tram[k][3]&0x7C;gram[k][2] = tram[k][2]&0x78;gram[k][1] |= tram[k][1]&0x70;gram[k][0] |= tram[k][0]&0x60;break;
+					case 10:gram[k][0] &= ~0x7E;
+					gram[k][4] = tram[k][4];gram[k][3] = tram[k][3]&0x7E;gram[k][2] = tram[k][2]&0x7C;gram[k][1] = tram[k][1]&0x78;gram[k][0] |= tram[k][0]&0x70;break;
+					case 11:
+					gram[k][4] = tram[k][4];gram[k][3] = tram[k][3];gram[k][2] |= tram[k][2]&0x7E;gram[k][1] |= tram[k][1]&0x7C;gram[k][0] |= tram[k][0]&0x78;break;
+					case 12:
+					gram[k][4] = tram[k][4];gram[k][3] = tram[k][3];gram[k][2] = tram[k][2];gram[k][1] |= tram[k][1]&0x7E;gram[k][0] |= tram[k][0]&0x7C;break;
+					case 13:
+					gram[k][4] = tram[k][4];gram[k][3] = tram[k][3];gram[k][2] = tram[k][2];gram[k][1] = tram[k][1];gram[k][0] |= tram[k][0]&0x7E;break;
+					case 14:
+					gram[k][4] = tram[k][4];gram[k][3] = tram[k][3];gram[k][2] = tram[k][2];gram[k][1] = tram[k][1];gram[k][0] = tram[k][0];break;
+					default:animotionstep[k]=0;break;
+				}break;
+				case 2://从上往下
+				for(i=0;i<5;i++) 
+				{
+					gram[k][i]<<=1;
+					gram[k][i]|=(tram[k][i]>>(7-animotionstep[k]))&1;
+				}break;
+				case 3://从下往上
+				for(i=0;i<5;i++) 
+				{
+					gram[k][i]>>=1;
+					gram[k][i]|=(tram[k][i]<<(7-animotionstep[k]))&0x80;
+				}break;
+				case 4://从右往左
+				for(i=0;i<4;i++) 
+				{
+					gram[k][i]=gram[k][i+1];
+				}
+				if(animotionstep[k]>0)
+					gram[k][4]=tram[k][animotionstep[k]-1];
+				else
+					gram[k][4]=0;
+				break;
+				case 5://从左往右
+				for(i=4;i>0;i--) 
+				{
+					gram[k][i]=gram[k][i-1];
+				}
+				if(animotionstep[k]>0)
+					gram[k][0]=tram[k][4-animotionstep[k]+1];
+				else
+					gram[k][0]=0;
+				break;
+			}
+			animotionstep[k]++;
 		}
+		else
+			animotionstep[k] = 0;
 	}
-  HAL_GPIO_WritePin(GPIOA, EN_Pin, GPIO_PIN_SET);
-	HAL_Delay(1);
-  HAL_GPIO_WritePin(GPIOA, D1_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(GPIOA, D2_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(GPIOA, D3_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(GPIOA, D4_Pin, GPIO_PIN_SET);
-  HAL_GPIO_WritePin(GPIOA, D5_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(GPIOA, EN_Pin, GPIO_PIN_RESET);
-	for(i=0;i<8;i++) 
+}
+
+void RefrashScren(void)
+{
+	int i,j,k;
+	for(k=0;k<5;k++)
 	{
-		for(j=0;j<7;j++)
+		ChoicePos(k);
+		HAL_GPIO_WritePin(GPIOA, EN_Pin, GPIO_PIN_RESET);
+		for(i=0;i<8;i++) 
 		{
-			HAL_GPIO_WritePin(GPIOA, CLK_Pin, GPIO_PIN_SET);
-			HAL_GPIO_WritePin(GPIOA, DATA_Pin, (VFD_Fonts[font][(ch[6-i]-' ')*5+3]>>(6-j))&1);
-			HAL_GPIO_WritePin(GPIOA, CLK_Pin, GPIO_PIN_RESET);
+			for(j=0;j<7;j++)
+			{
+				HAL_GPIO_WritePin(GPIOA, CLK_Pin, GPIO_PIN_SET);
+				HAL_GPIO_WritePin(GPIOA, DATA_Pin, (gram[7-i][k]>>(6-j))&1);
+				HAL_GPIO_WritePin(GPIOA, CLK_Pin, GPIO_PIN_RESET);
+			}
 		}
+		HAL_GPIO_WritePin(GPIOA, EN_Pin, GPIO_PIN_SET);
+		HAL_Delay(1);
 	}
-  HAL_GPIO_WritePin(GPIOA, EN_Pin, GPIO_PIN_SET);
-	HAL_Delay(1);
-  HAL_GPIO_WritePin(GPIOA, D1_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(GPIOA, D2_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(GPIOA, D3_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(GPIOA, D4_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(GPIOA, D5_Pin, GPIO_PIN_SET);
-  HAL_GPIO_WritePin(GPIOA, EN_Pin, GPIO_PIN_RESET);
-	for(i=0;i<8;i++) 
-	{
-		for(j=0;j<7;j++)
-		{
-			HAL_GPIO_WritePin(GPIOA, CLK_Pin, GPIO_PIN_SET);
-			HAL_GPIO_WritePin(GPIOA, DATA_Pin, (VFD_Fonts[font][(ch[6-i]-' ')*5+4]>>(6-j))&1);
-			HAL_GPIO_WritePin(GPIOA, CLK_Pin, GPIO_PIN_RESET);
-		}
-	}
-  HAL_GPIO_WritePin(GPIOA, EN_Pin, GPIO_PIN_SET);
-	HAL_Delay(1);
-//  HAL_GPIO_WritePin(GPIOA, EN_Pin, GPIO_PIN_RESET);
-//  HAL_GPIO_WritePin(GPIOA, D1_Pin, GPIO_PIN_RESET);
 }
 
 /* USER CODE END PFP */
@@ -526,7 +655,7 @@ void Display(char* ch,int font)
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+	int runcount=0;
   /* USER CODE END 1 */
   
 
@@ -559,7 +688,15 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-		Display("ABCDE34  ",0);
+	sprintf(displaystr," T%06d",runcount/20);
+	Animotion(displaystr,5,runcount/200%2);
+		
+		runcount++;
+	RefrashScren();
+	RefrashScren();
+	RefrashScren();
+	RefrashScren();
+	RefrashScren();
   }
   /* USER CODE END 3 */
 }
