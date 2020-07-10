@@ -28,21 +28,15 @@ Project File Date:  07/08/2020
 *** Using Compiler 'V5.06 update 6 (build 750)', folder: 'D:\Keil\ARM\ARMCC\Bin'
 Build target 'HDSP2072'
 compiling main.c...
-../Src/main.c(434): warning:  #188-D: enumerated type mixed with another type
-  			HAL_GPIO_WritePin(GPIOA, DATA_Pin, (VFD_Fonts[font][(ch[6-i]-' ')*5]>>(6-j))&1);
-../Src/main.c(451): warning:  #188-D: enumerated type mixed with another type
-  			HAL_GPIO_WritePin(GPIOA, DATA_Pin, (VFD_Fonts[font][(ch[6-i]-' ')*5+1]>>(6-j))&1);
-../Src/main.c(468): warning:  #188-D: enumerated type mixed with another type
-  			HAL_GPIO_WritePin(GPIOA, DATA_Pin, (VFD_Fonts[font][(ch[6-i]-' ')*5+2]>>(6-j))&1);
-../Src/main.c(485): warning:  #188-D: enumerated type mixed with another type
-  			HAL_GPIO_WritePin(GPIOA, DATA_Pin, (VFD_Fonts[font][(ch[6-i]-' ')*5+3]>>(6-j))&1);
-../Src/main.c(502): warning:  #188-D: enumerated type mixed with another type
-  			HAL_GPIO_WritePin(GPIOA, DATA_Pin, (VFD_Fonts[font][(ch[6-i]-' ')*5+4]>>(6-j))&1);
-../Src/main.c: 5 warnings, 0 errors
+../Src/main.c(525): warning:  #177-D: variable "j"  was declared but never referenced
+  	int i,k,j;
+../Src/main.c(690): warning:  #188-D: enumerated type mixed with another type
+  				HAL_GPIO_WritePin(GPIOA, DATA_Pin, (gram[7-i][k]>>(6-j))&1);
+../Src/main.c: 2 warnings, 0 errors
 linking...
-Program Size: Code=3484 RO-data=1352 RW-data=16 ZI-data=1024  
+Program Size: Code=6180 RO-data=1352 RW-data=16 ZI-data=1368  
 FromELF: creating hex file...
-"HDSP2072\HDSP2072.axf" - 0 Error(s), 5 Warning(s).
+"HDSP2072\HDSP2072.axf" - 0 Error(s), 2 Warning(s).
 
 <h2>Software Packages used:</h2>
 

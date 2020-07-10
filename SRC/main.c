@@ -523,7 +523,7 @@ unsigned char checkdiff(unsigned char* array1,unsigned char* array2,int len)
 void Animotion(char* ch,int motion,int font)
 {
 	int i,k,j;
-	static int animotionstep[14]={0};
+	static int animotionstep[20]={0};
 	
 	for(k=0;k<5;k++)
 		for(i=0;i<8;i++)
@@ -580,19 +580,50 @@ void Animotion(char* ch,int motion,int font)
 					gram[k][4] = tram[k][4];gram[k][3] = tram[k][3];gram[k][2] = tram[k][2];gram[k][1] = tram[k][1];gram[k][0] = tram[k][0];break;
 					default:animotionstep[k]=0;break;
 				}break;
-				case 2://从上往下
+				case 2:
+				switch(animotionstep[k])
+				{
+					case 0:for(i=0;i<5;i++) bram[k][i] = gram[k][i];break;
+					case 1:gram[k][0] &= ~0x40;break;
+					case 2:gram[k][0] &= ~0x60;gram[k][1] &= ~0x40;break;
+					case 3:gram[k][0] &= ~0x70;gram[k][1] &= ~0x60;gram[k][2] &= ~0x40;break;
+					case 4:gram[k][0] &= ~0x78;gram[k][1] &= ~0x70;gram[k][2] &= ~0x60;gram[k][3] &= ~0x40;
+					gram[k][0] |= tram[k][0]&0x40;break;
+					case 5:gram[k][0] &= ~0x7C;gram[k][1] &= ~0x78;gram[k][2] &= ~0x70;gram[k][3] &= ~0x60;gram[k][4] &= ~0x40;
+					gram[k][0] |= tram[k][0]&0x60;gram[k][1] |= tram[k][1]&0x40;break;
+					case 6:gram[k][0] &= ~0x7E;gram[k][1] &= ~0x7C;gram[k][2] &= ~0x78;gram[k][3] &= ~0x70;gram[k][4] &= ~0x60;
+					gram[k][0] |= tram[k][0]&0x70;gram[k][1] |= tram[k][1]&0x60;gram[k][2] |= tram[k][2]&0x40;break;
+					case 7:gram[k][1] &= ~0x7E;gram[k][2] &= ~0x7C;gram[k][3] &= ~0x78;gram[k][4] &= ~0x70;
+					gram[k][0] = tram[k][0]&0x78;gram[k][1] |= tram[k][1]&0x70;gram[k][2] |= tram[k][2]&0x60;gram[k][3] |= tram[k][3]&0x40;break;
+					case 8:gram[k][2] &= ~0x7E;gram[k][3] &= ~0x7C;gram[k][4] &= ~0x78;
+					gram[k][0] = tram[k][0]&0x7C;gram[k][1] = tram[k][1]&0x78;gram[k][2] |= tram[k][2]&0x70;gram[k][3] |= tram[k][3]&0x60;gram[k][4] |= tram[k][4]&0x40;break;
+					case 9:gram[k][3] &= ~0x7E;gram[k][4] &= ~0x7C;
+					gram[k][0] = tram[k][0]&0x7E;gram[k][1] = tram[k][1]&0x7C;gram[k][2] = tram[k][2]&0x78;gram[k][3] |= tram[k][3]&0x70;gram[k][4] |= tram[k][4]&0x60;break;
+					case 10:gram[k][4] &= ~0x7E;
+					gram[k][0] = tram[k][0];gram[k][1] = tram[k][1]&0x7E;gram[k][2] = tram[k][2]&0x7C;gram[k][3] = tram[k][3]&0x78;gram[k][4] |= tram[k][4]&0x70;break;
+					case 11:
+					gram[k][0] = tram[k][0];gram[k][1] = tram[k][1];gram[k][2] |= tram[k][2]&0x7E;gram[k][3] |= tram[k][3]&0x7C;gram[k][4] |= tram[k][4]&0x78;break;
+					case 12:
+					gram[k][0] = tram[k][0];gram[k][1] = tram[k][1];gram[k][2] = tram[k][2];gram[k][3] |= tram[k][3]&0x7E;gram[k][4] |= tram[k][4]&0x7C;break;
+					case 13:
+					gram[k][0] = tram[k][0];gram[k][1] = tram[k][1];gram[k][2] = tram[k][2];gram[k][3] = tram[k][3];gram[k][4] |= tram[k][4]&0x7E;break;
+					case 14:
+					gram[k][0] = tram[k][0];gram[k][1] = tram[k][1];gram[k][2] = tram[k][2];gram[k][3] = tram[k][3];gram[k][4] = tram[k][4];break;
+					default:animotionstep[k]=0;break;
+				}break;
+				case 3://从上往下
 				for(i=0;i<5;i++) 
 				{
 					gram[k][i]<<=1;
 					gram[k][i]|=(tram[k][i]>>(7-animotionstep[k]))&1;
 				}break;
-				case 3://从下往上
+				case 4://从下往上
 				for(i=0;i<5;i++) 
 				{
 					gram[k][i]>>=1;
 					gram[k][i]|=(tram[k][i]<<(7-animotionstep[k]))&0x80;
 				}break;
-				case 4://从右往左
+				case 5://从右往左
 				for(i=0;i<4;i++) 
 				{
 					gram[k][i]=gram[k][i+1];
@@ -602,7 +633,7 @@ void Animotion(char* ch,int motion,int font)
 				else
 					gram[k][4]=0;
 				break;
-				case 5://从左往右
+				case 6://从左往右
 				for(i=4;i>0;i--) 
 				{
 					gram[k][i]=gram[k][i-1];
@@ -612,6 +643,30 @@ void Animotion(char* ch,int motion,int font)
 				else
 					gram[k][0]=0;
 				break;
+				case 7://从上往下
+				for(i=0;i<5;i++) 
+				{
+					if(i<=animotionstep[k])
+					{
+						if(animotionstep[k]-i<=7)
+						{
+							gram[k][i]<<=1;
+							gram[k][i]|=(tram[k][i]>>(7-(animotionstep[k]-i)))&1;
+						}
+					}
+				}break;
+				case 8://从下往上
+				for(i=0;i<5;i++) 
+				{
+					if(i<=animotionstep[k])
+					{
+						if(animotionstep[k]-i<=7)
+						{
+							gram[k][4-i]<<=1;
+							gram[k][4-i]|=(tram[k][4-i]>>(7-(animotionstep[k]-i)))&1;
+						}
+					}
+				}break;
 			}
 			animotionstep[k]++;
 		}
@@ -689,7 +744,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 	sprintf(displaystr," T%06d",runcount/20);
-	Animotion(displaystr,5,runcount/200%2);
+	Animotion(displaystr,7,runcount/200%2);
 		
 		runcount++;
 	RefrashScren();

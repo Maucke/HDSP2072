@@ -1,6 +1,6 @@
 Dependencies for Project 'HDSP2072', Target 'HDSP2072': (DO NOT MODIFY !)
 F (startup_stm32f407xx.s)(0x5F05C480)(--cpu Cortex-M4.fp -g --apcs=interwork --pd "__MICROLIB SETA 1"-I.\RTE\_HDSP2072-ID:\Keil\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include-ID:\Keil\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include--pd "__UVISION_VERSION SETA 525" --pd "_RTE_ SETA 1" --pd "STM32F407xx SETA 1"--list startup_stm32f407xx.lst --xref -o hdsp2072\startup_stm32f407xx.o --depend hdsp2072\startup_stm32f407xx.d)
-F (../Src/main.c)(0x5F05D270)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_HDSP2072-ID:\Keil\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include-ID:\Keil\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="525" -D_RTE_ -DSTM32F407xx -DUSE_HAL_DRIVER -DSTM32F407xx -DUSE_HAL_DRIVER -DSTM32F407xx-o hdsp2072\main.o --omf_browse hdsp2072\main.crf --depend hdsp2072\main.d)
+F (../Src/main.c)(0x5F08674D)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_HDSP2072-ID:\Keil\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include-ID:\Keil\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="525" -D_RTE_ -DSTM32F407xx -DUSE_HAL_DRIVER -DSTM32F407xx -DUSE_HAL_DRIVER -DSTM32F407xx-o hdsp2072\main.o --omf_browse hdsp2072\main.crf --depend hdsp2072\main.d)
 I (../Inc/main.h)(0x5F05C47D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x5F05C399)
 I (../Inc/stm32f4xx_hal_conf.h)(0x5F05C47D)
@@ -30,6 +30,7 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h)(0x5F05C399
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h)(0x5F05C399)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h)(0x5F05C399)
 I (../Inc/gpio.h)(0x5F05C47D)
+I (D:\Keil\ARM\ARMCC\include\stdio.h)(0x599ECD2C)
 F (../Src/gpio.c)(0x5F05C47D)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_HDSP2072-ID:\Keil\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include-ID:\Keil\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="525" -D_RTE_ -DSTM32F407xx -DUSE_HAL_DRIVER -DSTM32F407xx -DUSE_HAL_DRIVER -DSTM32F407xx-o hdsp2072\gpio.o --omf_browse hdsp2072\gpio.crf --depend hdsp2072\gpio.d)
 I (../Inc/gpio.h)(0x5F05C47D)
 I (../Inc/main.h)(0x5F05C47D)

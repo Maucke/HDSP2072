@@ -29,3 +29,4 @@ hdsp2072\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc
 hdsp2072\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 hdsp2072\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
 hdsp2072\main.o: ../Inc/gpio.h
+hdsp2072\main.o: D:\Keil\ARM\ARMCC\Bin\..\include\stdio.h
