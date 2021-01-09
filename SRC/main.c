@@ -803,7 +803,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 		dis_cmd.fonttype = 0;
-		dis_cmd.rand = 1;
+		dis_cmd.rand = 0;
 		if(dis_cmd.rand == 1)
 		{
 			runcount++;
@@ -812,7 +812,7 @@ int main(void)
 //			dis_cmd.fonttype=runcount/200%2;
 			dis_cmd.motiontype=runcount/200%8;
 		}
-		
+		dis_cmd.motiontype=7;
 		Animotion(dis_cmd.displaystr,dis_cmd.motiontype,dis_cmd.fonttype,dis_cmd.single);
 		
 		for(i=0;i<dis_cmd.speed;i++)
