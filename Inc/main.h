@@ -28,7 +28,7 @@ extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f4xx_hal.h"
+#include "stm32f1xx_hal.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -58,22 +58,42 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define CLK_Pin GPIO_PIN_0
-#define CLK_GPIO_Port GPIOA
-#define DATA_Pin GPIO_PIN_1
-#define DATA_GPIO_Port GPIOA
-#define EN_Pin GPIO_PIN_2
-#define EN_GPIO_Port GPIOA
-#define D1_Pin GPIO_PIN_3
-#define D1_GPIO_Port GPIOA
-#define D2_Pin GPIO_PIN_4
-#define D2_GPIO_Port GPIOA
-#define D3_Pin GPIO_PIN_5
-#define D3_GPIO_Port GPIOA
-#define D4_Pin GPIO_PIN_6
-#define D4_GPIO_Port GPIOA
-#define D5_Pin GPIO_PIN_7
-#define D5_GPIO_Port GPIOA
+#define D1_1_Pin GPIO_PIN_0
+#define D1_1_GPIO_Port GPIOA
+#define D3_1_Pin GPIO_PIN_1
+#define D3_1_GPIO_Port GPIOA
+#define D5_1_Pin GPIO_PIN_2
+#define D5_1_GPIO_Port GPIOA
+#define DSSDA_Pin GPIO_PIN_3
+#define DSSDA_GPIO_Port GPIOA
+#define DSSCL_Pin GPIO_PIN_4
+#define DSSCL_GPIO_Port GPIOA
+#define DAT1_Pin GPIO_PIN_5
+#define DAT1_GPIO_Port GPIOA
+#define D2_2_Pin GPIO_PIN_6
+#define D2_2_GPIO_Port GPIOA
+#define D4_2_Pin GPIO_PIN_7
+#define D4_2_GPIO_Port GPIOA
+#define EN1_Pin GPIO_PIN_0
+#define EN1_GPIO_Port GPIOB
+#define D4_1_Pin GPIO_PIN_1
+#define D4_1_GPIO_Port GPIOB
+#define D2_1_Pin GPIO_PIN_2
+#define D2_1_GPIO_Port GPIOB
+#define DAT2_Pin GPIO_PIN_11
+#define DAT2_GPIO_Port GPIOA
+#define EN2_Pin GPIO_PIN_12
+#define EN2_GPIO_Port GPIOA
+#define D1_2_Pin GPIO_PIN_3
+#define D1_2_GPIO_Port GPIOB
+#define CLK2_Pin GPIO_PIN_4
+#define CLK2_GPIO_Port GPIOB
+#define D5_2_Pin GPIO_PIN_5
+#define D5_2_GPIO_Port GPIOB
+#define D3_2_Pin GPIO_PIN_6
+#define D3_2_GPIO_Port GPIOB
+#define CLK1_Pin GPIO_PIN_7
+#define CLK1_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

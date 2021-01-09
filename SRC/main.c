@@ -17,15 +17,18 @@
   ******************************************************************************
   */
 /* USER CODE END Header */
-
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "dma.h"
+#include "tim.h"
+#include "usart.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
 #include "stdio.h"
+#include "ds3231.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -52,6 +55,11 @@
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
+
+/* USER CODE END PFP */
+
+/* Private user code ---------------------------------------------------------*/
+/* USER CODE BEGIN 0 */
 
 const unsigned char VFD_Fonts[][91*5]=
 {
@@ -99,7 +107,7 @@ const unsigned char VFD_Fonts[][91*5]=
 
 0x2F,0x45,0x45,0x45,0x39,/*"5",21*/
 
-0x3E,0x49,0x49,0x49,0x31,/*"6",22*/
+0x3E,0x49,0x49,0x49,0x32,/*"6",22*/
 
 0x01,0x01,0x79,0x05,0x03,/*"7",23*/
 
@@ -420,92 +428,108 @@ const unsigned char VFD_Fonts[][91*5]=
 0x00,0x74,0x7C,0x4C,0x00,}/*"z",90*/
 };
 
-char displaystr[20];
 
 //graphic
 unsigned char gram[][5] = 
 {
-	//ç¬¬1ä¸ªæ•°ç ç®¡
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬1ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬2ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬3ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬4ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬5ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬6ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬7ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬8ä¸ªå­—ç¬¦
+	//µÚ1¸öÊıÂë¹Ü
+	0x00,0x00,0x00,0x00,0x00,//µÚ1¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ2¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ3¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ4¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ5¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ6¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ7¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ8¸ö×Ö·û
 	
-	//ç¬¬2ä¸ªæ•°ç ç®¡
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬1ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬2ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬3ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬4ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬5ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬6ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬7ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬8ä¸ªå­—ç¬¦
+	//µÚ2¸öÊıÂë¹Ü
+	0x00,0x00,0x00,0x00,0x00,//µÚ1¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ2¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ3¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ4¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ5¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ6¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ7¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ8¸ö×Ö·û
 };
 //target
 unsigned char tram[][5] = 
 {
-	//ç¬¬1ä¸ªæ•°ç ç®¡
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬1ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬2ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬3ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬4ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬5ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬6ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬7ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬8ä¸ªå­—ç¬¦
+	//µÚ1¸öÊıÂë¹Ü
+	0x00,0x00,0x00,0x00,0x00,//µÚ1¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ2¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ3¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ4¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ5¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ6¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ7¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ8¸ö×Ö·û
 	
-	//ç¬¬2ä¸ªæ•°ç ç®¡
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬1ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬2ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬3ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬4ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬5ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬6ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬7ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬8ä¸ªå­—ç¬¦
+	//µÚ2¸öÊıÂë¹Ü
+	0x00,0x00,0x00,0x00,0x00,//µÚ1¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ2¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ3¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ4¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ5¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ6¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ7¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ8¸ö×Ö·û
 };
 //before
 unsigned char bram[][5] = 
 {
-	//ç¬¬1ä¸ªæ•°ç ç®¡
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬1ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬2ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬3ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬4ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬5ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬6ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬7ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬8ä¸ªå­—ç¬¦
+	//µÚ1¸öÊıÂë¹Ü
+	0x00,0x00,0x00,0x00,0x00,//µÚ1¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ2¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ3¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ4¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ5¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ6¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ7¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ8¸ö×Ö·û
 	
-	//ç¬¬2ä¸ªæ•°ç ç®¡
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬1ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬2ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬3ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬4ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬5ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬6ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬7ä¸ªå­—ç¬¦
-	0x00,0x00,0x00,0x00,0x00,//ç¬¬8ä¸ªå­—ç¬¦
+	//µÚ2¸öÊıÂë¹Ü
+	0x00,0x00,0x00,0x00,0x00,//µÚ1¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ2¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ3¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ4¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ5¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ6¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ7¸ö×Ö·û
+	0x00,0x00,0x00,0x00,0x00,//µÚ8¸ö×Ö·û
 };
 
 void ChoicePos(int index)
 {
-	HAL_GPIO_WritePin(GPIOA, D1_Pin, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(GPIOA, D2_Pin, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(GPIOA, D3_Pin, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(GPIOA, D4_Pin, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(GPIOA, D5_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(D1_1_GPIO_Port, D1_1_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(D2_1_GPIO_Port, D2_1_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(D3_1_GPIO_Port, D3_1_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(D4_1_GPIO_Port, D4_1_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(D5_1_GPIO_Port, D5_1_Pin, GPIO_PIN_RESET);
 	switch(index)
 	{
-		case 0:HAL_GPIO_WritePin(GPIOA, D1_Pin, GPIO_PIN_SET);break;
-		case 1:HAL_GPIO_WritePin(GPIOA, D2_Pin, GPIO_PIN_SET);break;
-		case 2:HAL_GPIO_WritePin(GPIOA, D3_Pin, GPIO_PIN_SET);break;
-		case 3:HAL_GPIO_WritePin(GPIOA, D4_Pin, GPIO_PIN_SET);break;
-		case 4:HAL_GPIO_WritePin(GPIOA, D5_Pin, GPIO_PIN_SET);break;
+		case 0:HAL_GPIO_WritePin(D1_1_GPIO_Port, D1_1_Pin, GPIO_PIN_SET);break;
+		case 1:HAL_GPIO_WritePin(D2_1_GPIO_Port, D2_1_Pin, GPIO_PIN_SET);break;
+		case 2:HAL_GPIO_WritePin(D3_1_GPIO_Port, D3_1_Pin, GPIO_PIN_SET);break;
+		case 3:HAL_GPIO_WritePin(D4_1_GPIO_Port, D4_1_Pin, GPIO_PIN_SET);break;
+		case 4:HAL_GPIO_WritePin(D5_1_GPIO_Port, D5_1_Pin, GPIO_PIN_SET);break;
+	}
+}
+
+void ChoicePos_2(int index)
+{
+	HAL_GPIO_WritePin(D1_2_GPIO_Port, D1_2_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(D2_2_GPIO_Port, D2_2_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(D3_2_GPIO_Port, D3_2_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(D4_2_GPIO_Port, D4_2_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(D5_2_GPIO_Port, D5_2_Pin, GPIO_PIN_RESET);
+	switch(index)
+	{
+		case 0:HAL_GPIO_WritePin(D1_2_GPIO_Port, D1_2_Pin, GPIO_PIN_SET);break;
+		case 1:HAL_GPIO_WritePin(D2_2_GPIO_Port, D2_2_Pin, GPIO_PIN_SET);break;
+		case 2:HAL_GPIO_WritePin(D3_2_GPIO_Port, D3_2_Pin, GPIO_PIN_SET);break;
+		case 3:HAL_GPIO_WritePin(D4_2_GPIO_Port, D4_2_Pin, GPIO_PIN_SET);break;
+		case 4:HAL_GPIO_WritePin(D5_2_GPIO_Port, D5_2_Pin, GPIO_PIN_SET);break;
 	}
 }
 
@@ -520,17 +544,20 @@ unsigned char checkdiff(unsigned char* array1,unsigned char* array2,int len)
 	return 1;
 }
 
-void Animotion(char* ch,int motion,int font)
+void Animotion(char* ch,int motion,int font,int mode)
 {
-	int i,k,j;
+	int i,k;
 	static int animotionstep[20]={0};
 	
 	for(k=0;k<5;k++)
-		for(i=0;i<8;i++)
-			tram[i][k] = VFD_Fonts[font][(ch[i]-' ')*5+k];
-	for(k=0;k<8;k++)
+		for(i=0;i<16;i++)
+		{
+			if(ch[i]!=0)
+				tram[i][k] = VFD_Fonts[font][(ch[i]-' ')*5+k];
+		}
+	for(k=0;k<16;k++)
 	{
-		if(checkdiff(gram[k],tram[k],5)==0)
+		if(checkdiff(gram[k],tram[k],4)==0)
 		{
 			switch(motion)
 			{
@@ -611,19 +638,19 @@ void Animotion(char* ch,int motion,int font)
 					gram[k][0] = tram[k][0];gram[k][1] = tram[k][1];gram[k][2] = tram[k][2];gram[k][3] = tram[k][3];gram[k][4] = tram[k][4];break;
 					default:animotionstep[k]=0;break;
 				}break;
-				case 3://ä»ä¸Šå¾€ä¸‹
+				case 3://´ÓÉÏÍùÏÂ
 				for(i=0;i<5;i++) 
 				{
 					gram[k][i]<<=1;
 					gram[k][i]|=(tram[k][i]>>(7-animotionstep[k]))&1;
 				}break;
-				case 4://ä»ä¸‹å¾€ä¸Š
+				case 4://´ÓÏÂÍùÉÏ
 				for(i=0;i<5;i++) 
 				{
 					gram[k][i]>>=1;
 					gram[k][i]|=(tram[k][i]<<(7-animotionstep[k]))&0x80;
 				}break;
-				case 5://ä»å³å¾€å·¦
+				case 5://´ÓÓÒÍù×ó
 				for(i=0;i<4;i++) 
 				{
 					gram[k][i]=gram[k][i+1];
@@ -633,7 +660,7 @@ void Animotion(char* ch,int motion,int font)
 				else
 					gram[k][4]=0;
 				break;
-				case 6://ä»å·¦å¾€å³
+				case 6://´Ó×óÍùÓÒ
 				for(i=4;i>0;i--) 
 				{
 					gram[k][i]=gram[k][i-1];
@@ -643,7 +670,7 @@ void Animotion(char* ch,int motion,int font)
 				else
 					gram[k][0]=0;
 				break;
-				case 7://ä»ä¸Šå¾€ä¸‹
+				case 7://´ÓÉÏÍùÏÂ
 				for(i=0;i<5;i++) 
 				{
 					if(i<=animotionstep[k])
@@ -655,7 +682,7 @@ void Animotion(char* ch,int motion,int font)
 						}
 					}
 				}break;
-				case 8://ä»ä¸‹å¾€ä¸Š
+				case 8://´ÓÏÂÍùÉÏ
 				for(i=0;i<5;i++) 
 				{
 					if(i<=animotionstep[k])
@@ -669,37 +696,62 @@ void Animotion(char* ch,int motion,int font)
 				}break;
 			}
 			animotionstep[k]++;
+			if(mode)
+				return;
 		}
 		else
-			animotionstep[k] = 0;
+		{
+			for(i=0;i<5;i++) gram[k][i] = tram[k][i];animotionstep[k]=0;
+		}
 	}
 }
+void delayXus(uint16_t us)
 
+{
+
+	uint16_t differ=0xffff-us-5;					//Éè¶¨¶¨Ê±Æ÷¼ÆÊıÆ÷ÆğÊ¼Öµ
+
+	__HAL_TIM_SET_COUNTER(&htim2,differ);
+
+	HAL_TIM_Base_Start(&htim2);					//Æô¶¯¶¨Ê±Æ÷
+
+  while(differ<0xffff-6)							//²¹³¥£¬ÅĞ¶Ï
+
+  {
+
+    differ=__HAL_TIM_GET_COUNTER(&htim2);			//²éÑ¯¼ÆÊıÆ÷µÄ¼ÆÊıÖµ
+
+  }
+
+  HAL_TIM_Base_Stop(&htim2);
+
+}
 void RefrashScren(void)
 {
 	int i,j,k;
 	for(k=0;k<5;k++)
 	{
+		HAL_Delay(1);
 		ChoicePos(k);
-		HAL_GPIO_WritePin(GPIOA, EN_Pin, GPIO_PIN_RESET);
+		ChoicePos_2(k);
+		HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, GPIO_PIN_RESET);
 		for(i=0;i<8;i++) 
 		{
 			for(j=0;j<7;j++)
 			{
-				HAL_GPIO_WritePin(GPIOA, CLK_Pin, GPIO_PIN_SET);
-				HAL_GPIO_WritePin(GPIOA, DATA_Pin, (gram[7-i][k]>>(6-j))&1);
-				HAL_GPIO_WritePin(GPIOA, CLK_Pin, GPIO_PIN_RESET);
+				HAL_GPIO_WritePin(CLK1_GPIO_Port, CLK1_Pin, GPIO_PIN_SET);
+				HAL_GPIO_WritePin(CLK2_GPIO_Port, CLK2_Pin, GPIO_PIN_SET);
+				HAL_GPIO_WritePin(DAT1_GPIO_Port, DAT1_Pin, (GPIO_PinState)(gram[6-i+7][k]>>(6-j))&1);
+				HAL_GPIO_WritePin(DAT2_GPIO_Port, DAT2_Pin, (GPIO_PinState)(gram[6-i][k]>>(6-j))&1);
+				HAL_GPIO_WritePin(CLK1_GPIO_Port, CLK1_Pin, GPIO_PIN_RESET);
+				HAL_GPIO_WritePin(CLK2_GPIO_Port, CLK2_Pin, GPIO_PIN_RESET);
 			}
 		}
-		HAL_GPIO_WritePin(GPIOA, EN_Pin, GPIO_PIN_SET);
-		HAL_Delay(1);
+		HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, GPIO_PIN_SET);
+		HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, GPIO_PIN_SET);
 	}
 }
-
-/* USER CODE END PFP */
-
-/* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN 0 */
 
 /* USER CODE END 0 */
 
@@ -711,8 +763,8 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 	int runcount=0;
+	int i;
   /* USER CODE END 1 */
-  
 
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -732,8 +784,15 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
+  MX_USART1_UART_Init();
+  MX_TIM1_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
 
+	HAL_TIM_Base_Start_IT(&htim1);
+	__HAL_UART_ENABLE_IT(&huart1, UART_IT_IDLE);
+  HAL_UART_Receive_DMA(&huart1,Uart_Recv1_Buf,Uart_Max_Length);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -743,15 +802,23 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	sprintf(displaystr," T%06d",runcount/20);
-	Animotion(displaystr,7,runcount/200%2);
+		dis_cmd.fonttype = 0;
+		dis_cmd.rand = 1;
+		if(dis_cmd.rand == 1)
+		{
+			runcount++;
+//			if(runcount%20==0)
+//				sprintf(dis_cmd.displaystr,"%07X%07X",rand());
+//			dis_cmd.fonttype=runcount/200%2;
+			dis_cmd.motiontype=runcount/200%9;
+		}
 		
-		runcount++;
-	RefrashScren();
-	RefrashScren();
-	RefrashScren();
-	RefrashScren();
-	RefrashScren();
+		Animotion(dis_cmd.displaystr,dis_cmd.motiontype,dis_cmd.fonttype,dis_cmd.single);
+		
+		for(i=0;i<dis_cmd.speed;i++)
+		{
+			RefrashScren();
+		}
   }
   /* USER CODE END 3 */
 }
@@ -765,30 +832,30 @@ void SystemClock_Config(void)
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
-  /** Configure the main internal regulator output voltage 
+  /** Initializes the RCC Oscillators according to the specified parameters
+  * in the RCC_OscInitTypeDef structure.
   */
-  __HAL_RCC_PWR_CLK_ENABLE();
-  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
-  /** Initializes the CPU, AHB and APB busses clocks 
-  */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+  RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+  RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
   }
-  /** Initializes the CPU, AHB and APB busses clocks 
+  /** Initializes the CPU, AHB and APB buses clocks
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
   {
     Error_Handler();
   }
@@ -796,6 +863,15 @@ void SystemClock_Config(void)
 
 /* USER CODE BEGIN 4 */
 
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+	 
+	if (htim->Instance == htim1.Instance)
+	{
+			Time_Handle();
+			sprintf(dis_cmd.displaystr," %s-%s%s",ds3231.Monm,ds3231.Day,ds3231.Time);
+	}
+}
 /* USER CODE END 4 */
 
 /**
@@ -819,7 +895,7 @@ void Error_Handler(void)
   * @retval None
   */
 void assert_failed(uint8_t *file, uint32_t line)
-{ 
+{
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line number,
      tex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
